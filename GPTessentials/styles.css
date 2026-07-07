@@ -1,0 +1,398 @@
+/* =========================================
+   LONG CHAT PERFORMANCE OPTIMIZATION
+   ========================================= */
+#thread section[data-testid^="conversation-turn-"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+
+/* =========================================
+   PIN MENU & HEADER
+   ========================================= */
+.pin-header-btn {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.pin-menu-container {
+    position: fixed;
+    /* top/left are set dynamically by JS */
+    width: 240px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--main-surface-secondary);
+    border: 1px solid var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    z-index: 9999;
+    font-family: inherit;
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: none;
+}
+
+/* =========================================
+   PIN MENU ITEMS
+   ========================================= */
+.pin-menu-item {
+    position: relative;
+    /* For absolute positioning of action buttons */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.pin-menu-item:hover {
+    background-color: var(--main-surface-tertiary);
+    /* Use tertiary for hover */
+}
+
+/* Action Buttons (Unpin / Rename) */
+.pin-item-action-btn {
+    position: absolute;
+    top: 7px;
+    z-index: 10;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: none;
+    background: transparent;
+    color: var(--text-secondary);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.5;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.pin-item-action-btn:hover {
+    background-color: var(--main-surface-tertiary);
+    color: var(--text-primary);
+    opacity: 1;
+}
+
+/* Specific positioning */
+.pin-item-unpin-btn {
+    right: 0;
+}
+
+.pin-item-rename-btn {
+    right: 24px;
+}
+
+/* Show buttons on hover */
+.pin-menu-item:hover .pin-item-action-btn {
+    display: flex;
+}
+
+
+/* =========================================
+   PIN RESET BUTTON (In Menu)
+   ========================================= */
+.pin-reset-btn {
+    background: transparent;
+    border: 0px solid var(--bg-secondary);
+    border-radius: 4px;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 11px;
+    transition: background 0.2s;
+}
+
+.pin-reset-btn:hover {
+    background: var(--main-surface-tertiary);
+}
+
+
+/* =========================================
+   MESSAGE PIN BUTTON (In Chat)
+   ========================================= */
+.message-pin-button {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    /* Allow parent to control color */
+    background: inherit;
+    /* Allow parent to control background */
+    border-radius: 0.5rem;
+}
+
+.message-pin-button:hover {
+    background-color: var(--main-surface-secondary);
+}
+
+
+/* =========================================
+   SELECTIVE RESET MODAL
+   ========================================= */
+.selective-reset-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    max-height: 600px;
+    background: var(--main-surface-secondary);
+    border: 1px solid var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 10000;
+    font-family: inherit;
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: none;
+}
+
+.selective-reset-chat-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.reset-chat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: var(--main-surface-secondary);
+    /* Default state per user last change */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* Hover state */
+.reset-chat-item:hover {
+    background: var(--main-surface-tertiary);
+}
+
+/* Selected state */
+.reset-chat-item[data-selected="true"] {
+    background: var(--main-surface-tertiary);
+}
+
+
+.reset-chat-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin-right: 8px;
+}
+
+.reset-chat-open-btn {
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: background-color 0.2s, opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.reset-chat-open-btn:hover {
+    background: var(--main-surface-tertiary);
+    color: var(--text-primary);
+    opacity: 1;
+}
+
+.modal-action-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-btn-primary {
+    background: transparent;
+    border: 0px solid rgba(224, 46, 42, 0.275);
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.modal-btn-primary:hover {
+    background: rgba(224, 46, 42, 0.275);
+}
+
+.modal-btn-secondary {
+    background: transparent;
+    border: 0px solid #666;
+    color: var(--text-secondary);
+    transition: background 0.2s;
+}
+
+.modal-btn-secondary:hover {
+    background: var(--main-surface-tertiary);
+}
+
+.reset-pin-count {
+    color: #888;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   FOLDER MENU & ITEMS
+   ========================================= */
+.folder-menu-container {
+    position: fixed;
+    /* top/left are set dynamically by JS */
+    width: 400px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--main-surface-secondary);
+    border: 1px solid var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    z-index: 9999;
+    font-family: inherit;
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: none;
+}
+
+.new-folder-input {
+    outline: none;
+    /* Removing default focus outline */
+    box-shadow: none !important;
+    margin: 4px 0;
+    background-color: var(--main-surface-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-secondary);
+    transition: outline-color 0.2s, border-color 0.2s;
+}
+
+.new-folder-input:focus {
+    /* Use outline for focus ring, white/primary color */
+    /* outline: 1px solid var(--text-primary) !important; */
+    /* border-color: var(--text-primary) !important; */
+    box-shadow: none !important;
+}
+
+.new-folder-input.error {
+    /* Use outline for error ring, red color */
+    /* outline: 1px solid #ef4444 !important; */
+    border-color: #ef4444 !important;
+}
+
+.new-folder-btn {
+    float: right;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.new-folder-btn:hover {
+    background-color: var(--main-surface-tertiary);
+    color: var(--text-primary);
+    opacity: 1;
+}
+
+.folder-item,
+.folder-chat-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.folder-item:hover,
+.folder-chat-item:hover {
+    background-color: var(--main-surface-tertiary);
+}
+
+.folder-action-btn {
+    position: absolute;
+    top: 7px;
+    z-index: 10;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: none;
+    background: transparent;
+    color: var(--text-secondary);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0.5;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.folder-action-btn:hover {
+    background-color: var(--main-surface-tertiary);
+    color: var(--text-primary);
+    opacity: 1;
+}
+
+.folder-delete-btn {
+    right: 0;
+}
+
+.folder-rename-btn {
+    right: 24px;
+}
+
+.folder-item:hover .folder-action-btn,
+.folder-chat-item:hover .folder-action-btn {
+    display: flex;
+}
+
+.folder-back-btn {
+    background: transparent;
+    border: 0px solid var(--bg-secondary);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.folder-back-btn:hover {
+    background: var(--main-surface-tertiary);
+}

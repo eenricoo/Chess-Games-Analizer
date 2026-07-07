@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "GPT Essentials",
+  "version": "1.0.0",
+  "description": "Just some essential tools to enhance your productivity with chatGPT.",
+  "icons": {
+    "16": "icons/GPT-Essentials_icon16.png",
+    "48": "icons/GPT-Essentials_icon48.png",
+    "128": "icons/GPT-Essentials_icon128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "modules/pins.js",
+        "modules/folders.js",
+        "modules/storage.js",
+        "modules/utils.js"
+      ],
+      "matches": [
+        "https://chatgpt.com/*"
+      ]
+    }
+  ]
+}
